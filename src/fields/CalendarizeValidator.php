@@ -16,8 +16,8 @@ class CalendarizeValidator extends Validator {
 	/**
 	 * @inheritdoc
 	 */
-	protected function validateValue($value)
-	{
+	protected function validateValue($value): ?array
+    {
         if ($value->startDate && !$value->endDate) {
             return [
                 \Craft::t(

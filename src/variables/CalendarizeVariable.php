@@ -10,9 +10,11 @@
 
 namespace unionco\calendarize\variables;
 
+use DateTime;
 use Craft;
 use craft\i18n\Locale;
 use unionco\calendarize\Calendarize;
+use unionco\calendarize\models\Occurrence;
 
 /**
  * @author    Franco Valdes
@@ -25,12 +27,12 @@ class CalendarizeVariable
     // =========================================================================
 
     /**
-     * Returns all of the localized day of the week names in value label array
+     * Returns all the localized day of the week names in value label array
      *
      * @param string|null $length The format length that should be returned. Values: Locale::LENGTH_ABBREVIATED, ::MEDIUM, ::FULL
      * @return array The localized day array
      */
-    public function getWeekDayNames($length = null)
+    public function getWeekDayNames(string $length = null)
     {
         if (!$length) {
             $length = Locale::LENGTH_ABBREVIATED;
@@ -49,11 +51,11 @@ class CalendarizeVariable
     /**
      * Get week month text
      *
-     * @param date date
+     * @param DateTime $date
      *
      * @return string
      */
-    public function weekMonthText($date)
+    public function weekMonthText(DateTime $date): string
     {
         return Calendarize::$plugin->calendar->weekMonthText($date);
     }
@@ -61,12 +63,12 @@ class CalendarizeVariable
     /**
      * Get upcoming entries
      *
-     * @param criteria ElementCriteria
-     * @param order string
+     * @param array $criteria
+     * @param string $order
      *
      * @return array Occurance[]
      */
-    public function upcoming($criteria = [], $order = "asc", $unique = false)
+    public function upcoming(array $criteria = [], string $order = "asc", $unique = false)
     {
         return Calendarize::$plugin->calendar->upcoming($criteria, $order, $unique);
     }
@@ -74,13 +76,13 @@ class CalendarizeVariable
     /**
      * Get entries after date
      *
-     * @param date date
-     * @param criteria ElementCriteria
-     * @param order string
+     * @param DateTime|null $date
+     * @param array $criteria
+     * @param string $order
      *
-     * @return array Occurance[]
+     * @return Occurrence[]
      */
-    public function after($date = null, $criteria = [], $order = "asc", $unique = false)
+    public function after(DateTime $date = null, array $criteria = [], string $order = "asc", $unique = false): array
     {
         return Calendarize::$plugin->calendar->after($date, $criteria, $order, $unique);
     }
@@ -88,14 +90,14 @@ class CalendarizeVariable
     /**
      * Get entries between two dates
      *
-     * @param start string|date
-     * @param end string|date
-     * @param criteria ElementCriteria
-     * @param order string
+     * @param DateTime|string $start
+     * @param DateTime|string $end
+     * @param array $criteria
+     * @param string $order
      *
-     * @return array Occurance[]
+     * @return Occurrence[]
      */
-    public function between($start, $end, $criteria = [], $order = "asc", $unique = false)
+    public function between(DateTime|string $start, DateTime|string $end, array $criteria = [], string $order = "asc", $unique = false): array
     {
         return Calendarize::$plugin->calendar->between($start, $end, $criteria, $order, $unique);
     }

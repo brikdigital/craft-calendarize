@@ -16,6 +16,7 @@ use craft\elements\Entry;
 use craft\records\Field as FieldRecord;
 use craft\records\Section;
 use craft\web\Controller;
+use craft\web\Response;
 use unionco\calendarize\Calendarize;
 use unionco\calendarize\models\CalendarizeModel;
 use unionco\calendarize\records\CalendarizeRecord;
@@ -44,9 +45,12 @@ class DefaultController extends Controller
 
     /**
      * Download an ICS file for a single event.
-     * @return mixed
+     * @param int $ownerId
+     * @param int $ownerSiteId
+     * @param int $fieldId
+     * @return Response|\yii\console\Response|\yii\web\Response
      */
-    public function actionMakeIcs(int $ownerId, int $ownerSiteId, int $fieldId)
+    public function actionMakeIcs(int $ownerId, int $ownerSiteId, int $fieldId): Response|\yii\web\Response|\yii\console\Response
     {
         $record = CalendarizeRecord::findOne(
 			[
@@ -70,9 +74,14 @@ class DefaultController extends Controller
 
     /**
      * Download an ICS file for all events in a section.
-     * @return mixed
+     * @param int $sectionId
+     * @param int $siteId
+     * @param int $fieldId
+     * @param null $relatedTo
+     * @param null $filename
+     * @return Response|\yii\console\Response|\yii\web\Response
      */
-    public function actionMakeSectionIcs(int $sectionId, int $siteId, int $fieldId, $relatedTo = null, $filename = null)
+    public function actionMakeSectionIcs(int $sectionId, int $siteId, int $fieldId, $relatedTo = null, $filename = null): Response|\yii\web\Response|\yii\console\Response
     {
         $field = FieldRecord::findOne($fieldId);
         $fieldHandle = $field->handle;

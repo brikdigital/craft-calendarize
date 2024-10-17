@@ -12,6 +12,7 @@ namespace unionco\calendarize;
 
 use Craft;
 use craft\base\Element;
+use craft\base\Model;
 use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\elements\db\ElementQuery;
@@ -37,34 +38,18 @@ use yii\base\Event;
  * @package   Calendarize
  * @since     1.0.0
  *
- * @property  CalendarizeServiceService $calendarizeService
+ * @property-read  CalendarizeService $calendar
  */
 class Calendarize extends Plugin
 {
     // Static Properties
     // =========================================================================
-
-    /**
-     * @var Calendarize
-     */
-    public static $plugin;
+    public static Calendarize $plugin;
 
     // Public Properties
     // =========================================================================
-    
-    /**
-     * @var boolean
-     */
     public $hasSettings = false;
-
-    /**
-     * @var boolean
-     */
     public bool $hasCpSection = false;
-
-    /**
-     * @var string
-     */
     public ?string $changelogUrl = "https://raw.githubusercontent.com/unionco/calendarize/master/CHANGELOG.md";
 
     /**
@@ -173,7 +158,7 @@ class Calendarize extends Plugin
     /**
      * @inheritdoc
      */
-    protected function createSettingsModel(): ?\craft\base\Model
+    protected function createSettingsModel(): ?Model
     {
         return new Settings();
     }

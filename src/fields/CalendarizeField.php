@@ -15,10 +15,13 @@ use craft\i18n\Locale;
 use craft\base\Element;
 use craft\base\Field;
 use craft\base\ElementInterface;
+use DateTime;
+use Exception;
 use unionco\calendarize\Calendarize;
 use craft\base\PreviewableFieldInterface;
 use craft\elements\db\ElementQueryInterface;
 use unionco\calendarize\assetbundles\fieldbundle\FieldAssetBundle;
+use yii\base\InvalidConfigException;
 
 /**
  * @author    Franco Valdes
@@ -31,12 +34,12 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
     // =========================================================================
 
     /**
-     * @var datetime
+     * @var DateTime
      */
     public $startDate;
 
     /**
-     * @var datetime
+     * @var DateTime
      */
     public $endDate;
 
@@ -61,7 +64,7 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
     public $endRepeat = NULL;
 
     /**
-     * @var datetime
+     * @var DateTime
      */
     public $endRepeatDate = NULL;
 
@@ -84,6 +87,18 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
      * @var string
      */
     public $months = null;
+
+//    public DateTime $startDate;
+//    public DateTime $endDate;
+//    public bool $repeats = false;
+//    public bool $allDay = false;
+//    public array $days = [];
+//    public ?string $endRepeat = NULL;
+//    public ?DateTime $endRepeatDate = NULL;
+//    public array $exceptions = [];
+//    public array $timeChanges = [];
+//    public ?string $repeatType = NULL;
+//    public ?string $months = null;
 
     // Static Methods
     // =========================================================================
@@ -129,14 +144,14 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function normalizeValue(mixed $value, ?\craft\base\ElementInterface $element = null): mixed
+    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
         return Calendarize::$plugin->calendar->getField($this, $element, $value);
     }
 
     /**
-	 * @inheritdoc
-	 */
+     * @throws Exception
+     */
 	public function modifyElementsQuery(ElementQueryInterface $query, mixed $value): void
 	{
 		// For whatever reason, this function can be
@@ -146,22 +161,18 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
         }
 
 		Calendarize::$plugin->calendar->modifyElementsQuery($query, $value);
-
-		return;
     }
 
     /**
-	 * @inheritdoc
-	 */
+     * @inheritdoc
+     * @throws Exception
+     */
 	public function afterElementSave(ElementInterface $element, bool $isNew): void
 	{
 		Calendarize::$plugin->calendar->saveField($this, $element);
 		parent::afterElementSave($element, $isNew);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getTableAttributeHtml(mixed $value, ElementInterface $element): string
     {
         if (empty($value->startDate) && empty($value->endDate)) {
@@ -184,8 +195,9 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
 
     /**
      * @inheritdoc
+     * @throws InvalidConfigException
      */
-    public function getInputHtml(mixed $value, ?\craft\base\ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
     {
         // Register our asset bundle
         $view = Craft::$app->getView();

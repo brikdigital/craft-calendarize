@@ -16,8 +16,8 @@ use unionco\calendarize\records\CalendarizeRecord;
 class Install extends Migration
 {
 
-	public function safeUp ()
-	{
+	public function safeUp(): bool
+    {
 		// 1. Create new table
 		// ---------------------------------------------------------------------
 
@@ -93,7 +93,7 @@ class Install extends Migration
 		return true;
 	}
 
-	public function safeDown ()
+	public function safeDown(): bool
 	{
 		$this->dropTableIfExists(CalendarizeRecord::$tableName);
 

@@ -40,8 +40,7 @@ class CalendarizeRecord extends ActiveRecord
 	// Props: Public Static
 	// -------------------------------------------------------------------------
 
-	/** @var string */
-	public static $tableName = '{{%calendarize}}';
+	public static string $tableName = '{{%calendarize}}';
 
 	// Public Methods
 	// =========================================================================

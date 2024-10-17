@@ -13,14 +13,20 @@ namespace unionco\calendarize\services;
 
 use Craft;
 use craft\base\Component;
+use craft\base\Element;
 use craft\base\ElementInterface;
+use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
+use craft\errors\SiteNotFoundException;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\Db;
 use craft\helpers\Json;
+use DateInvalidTimeZoneException;
+use DateMalformedStringException;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use unionco\calendarize\Calendarize;
 use unionco\calendarize\fields\CalendarizeField;
 use unionco\calendarize\models\CalendarizeModel;
@@ -35,16 +41,11 @@ class CalendarizeService extends Component
 {
     // Private Properties
     // =========================================================================
-
-    /** @var CalendarModel[] */
-    private $entryCache = [];
+    /** @var CalendarizeModel[] */
+    private array $entryCache = [];
 
     // Public Methods
     // =========================================================================
-
-    /**
-     *
-     */
     public function weekMonthText($date): string
     {
         if (!$date) return '';
@@ -68,28 +69,27 @@ class CalendarizeService extends Component
     public function nth($d)
     {
         if ($d > 3 && $d < 21) return 'th';
-        switch ($d % 10) {
-            case 1:
-                return "st";
-            case 2:
-                return "nd";
-            case 3:
-                return "rd";
-            default:
-                return "th";
-        }
+        return match ($d % 10) {
+            1 => "st",
+            2 => "nd",
+            3 => "rd",
+            default => "th",
+        };
     }
 
     /**
      * Get entries with future occurrence of date
      *
-     * @param date string|date
-     * @param criteria mixed
-     * @param order string
-     *
-     * @return occurances array
+     * @param DateTime|string $date
+     * @param array $criteria
+     * @param string $order
+     * @param bool $unique
+     * @return array
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedStringException
+     * @throws Exception
      */
-    public function after($date, $criteria = [], $order = 'asc', $unique = false)
+    public function after(DateTime|string $date, array $criteria = [], string $order = 'asc', bool $unique = false): array
     {
         if (is_string($date)) {
             $date = DateTimeHelper::toDateTime(new DateTime($date, new DateTimeZone(Craft::$app->getTimeZone())));
@@ -114,7 +114,7 @@ class CalendarizeService extends Component
             $occurrences = $entry->{$fieldHandle}->getOccurrencesBetween($date, null, $unique ? 1 : null);
 
             if ($occurrences) {
-                foreach ($occurrences as $key => $occurrence) {
+                foreach ($occurrences as $occurrence) {
                     $allOccurrences[] = $occurrence;
                 }
             }
@@ -134,14 +134,18 @@ class CalendarizeService extends Component
     /**
      * Get entries between two dates.
      *
-     * @param start string|date
-     * @param end string|date
-     * @param criteria mixed
-     * @param order string
-     *
-     * @return occurances array
+     * @param DateTime|string $start
+     * @param DateTime|string $end
+     * @param array $criteria
+     * @param string $order
+     * @param bool $unique
+     * @return array
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedStringException
+     * @throws SiteNotFoundException
+     * @throws Exception
      */
-    public function between($start, $end, $criteria = [], $order = 'asc', $unique = false)
+    public function between(DateTime|string $start, DateTime|string $end, array $criteria = [], string $order = 'asc', bool $unique = false): array
     {
         if (is_string($start)) {
             $start = DateTimeHelper::toDateTime(new DateTime($start, new DateTimeZone(Craft::$app->getTimeZone())));
@@ -170,7 +174,7 @@ class CalendarizeService extends Component
             $occurrences = $entry->{$fieldHandle}->getOccurrencesBetween($start, $end, $unique ? 1 : null);
 
             if ($occurrences) {
-                foreach ($occurrences as $key => $occurrence) {
+                foreach ($occurrences as $occurrence) {
                     $allOccurrences[] = $occurrence;
                 }
             }
@@ -190,12 +194,15 @@ class CalendarizeService extends Component
     /**
      * Get future occurrence
      *
-     * @param criteria mixed
-     * @param order string
-     *
-     * @return occurances array
+     * @param array $criteria
+     * @param string $order
+     * @param bool $unique
+     * @return array
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedStringException
+     * @throws Exception
      */
-    public function upcoming($criteria = [], $order = 'asc', $unique = false)
+    public function upcoming(array $criteria = [], string $order = 'asc', bool $unique = false): array
     {
         $today = DateTimeHelper::toDateTime(new DateTime('now', new DateTimeZone(Craft::$app->getTimeZone())));
 
@@ -205,11 +212,15 @@ class CalendarizeService extends Component
     /**
      * Get entries with future occurrence
      *
-     * @param criteria mixed
-     *
-     * @return entries array
+     * @param array $criteria
+     * @param string $from
+     * @return CalendarizeModel|array
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedStringException
+     * @throws SiteNotFoundException
+     * @throws Exception
      */
-    private function _entries($criteria = [], $from = 'now')
+    private function _entries(array $criteria = [], string $from = 'now'): CalendarizeModel|array
     {
         if (is_string($from)) {
             $from = DateTimeHelper::toDateTime(new DateTime($from, new DateTimeZone(Craft::$app->getTimeZone())));
@@ -259,11 +270,11 @@ class CalendarizeService extends Component
     /**
      * Sort entries by next occurrences
      *
-     * @param entries array
-     *
-     * @return entries array
+     * @param array $entries
+     * @param string $order
+     * @return array
      */
-    protected function sort($entries, $order = 'asc')
+    protected function sort(array $entries, string $order = 'asc'): array
     {
         usort($entries, function ($a, $b) {
             $startA = $a->next;
@@ -272,6 +283,8 @@ class CalendarizeService extends Component
             if ($startA && $startB) {
                 return $startA <=> $startB;
             }
+
+            return null;
         });
 
         if ($order === 'desc') {
@@ -284,13 +297,13 @@ class CalendarizeService extends Component
     /**
      * Get Field
      *
-     * @param field CalendarizeField
-     * @param owner ElementInterface
-     * @param value mixed
+     * @param CalendarizeField $field
+     * @param mixed $value
+     * @param ElementInterface|null $owner
      *
-     * @return mixed
+     * @return CalendarizeModel|void
      */
-    public function getField(CalendarizeField $field, ElementInterface $owner = null, $value)
+    public function getField(CalendarizeField $field, mixed $value, ElementInterface $owner = null)
     {
         if (!$owner) {
             return;
@@ -326,10 +339,10 @@ class CalendarizeService extends Component
      * @param ElementQueryInterface $query
      * @param                       $value
      *
-     * @return null
+     * @return void
      * @throws Exception
      */
-    public function modifyElementsQuery(ElementQueryInterface $query, $value)
+    public function modifyElementsQuery(ElementQueryInterface $query, $value): void
     {
         if (!$value) return;
         /** @var ElementQuery $query */
@@ -354,8 +367,6 @@ class CalendarizeService extends Component
             "{$tableName} {$tableAlias}",
             $on
         );
-
-        return;
     }
 
     /**
@@ -366,13 +377,10 @@ class CalendarizeService extends Component
      *
      * @return bool
      * @throws Exception
-     * @throws \yii\base\InvalidConfigException
      */
     public function saveField(CalendarizeField $field, ElementInterface $owner): bool
     {
-        /** @var Element $owner */
         $locale = $owner->getSite()->language;
-        /** @var Map $value */
         $value = $owner->getFieldValue($field->handle);
 
         $record = CalendarizeRecord::findOne(

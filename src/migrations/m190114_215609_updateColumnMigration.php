@@ -14,7 +14,7 @@ class m190114_215609_updateColumnMigration extends Migration
     /**
      * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         // Place migration code here...
         $this->alterColumn(CalendarizeRecord::$tableName, 'startDate', $this->dateTime());

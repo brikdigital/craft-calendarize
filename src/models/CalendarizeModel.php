@@ -11,11 +11,15 @@
 namespace unionco\calendarize\models;
 
 use Craft;
+use craft\base\ElementInterface;
 use craft\base\Model;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\Json;
+use DateInvalidTimeZoneException;
+use DateMalformedStringException;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use RRule\RRule;
 use RRule\RSet;
 use unionco\calendarize\Calendarize;
@@ -30,9 +34,6 @@ class CalendarizeModel extends Model
     // Public Properties
     // =========================================================================
 
-    /**
-     * @var string
-     */
     private $owner;
     public $ownerId;
     public $ownerSiteId;
@@ -70,8 +71,7 @@ class CalendarizeModel extends Model
     // Private Properties
     // =========================================================================
 
-    /** @var CalendarModel[] */
-    private $occurrenceCache;
+    private RSet $occurrenceCache;
 
     // Public Methods
     // =========================================================================
@@ -161,9 +161,12 @@ class CalendarizeModel extends Model
     /**
      * Gets the next occurrence datetime
      *
-     * @return datetime
+     * @return Occurrence|false
+     * @throws DateMalformedStringException
+     * @throws DateInvalidTimeZoneException
+     * @throws Exception
      */
-    public function next()
+    public function next(): bool|Occurrence
     {
         if (empty($this->startDate) || empty($this->endDate)) {
             return false;
@@ -174,7 +177,7 @@ class CalendarizeModel extends Model
         $days = $this->days;
         $diff = $this->endDate->getTimestamp() - $this->startDate->getTimestamp();
 
-        // This event isnt in range just yet...
+        // This event isn't in range just yet...
         if ($today->format('Y-m-d') < $this->startDate->format('Y-m-d')) {
             return new Occurrence($this->owner, $this->startDate, $diff);
         }
@@ -234,12 +237,15 @@ class CalendarizeModel extends Model
     /**
      * Get occurrences between two dates
      *
-     * @param startDate string|Datetime
-     * @param startDate string|Datetime
-     *
+     * @param string|Datetime $startDate
+     * @param string|Datetime|null $endDate
+     * @param int $limit
      * @return array
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedStringException
+     * @throws Exception
      */
-    public function getOccurrencesBetween($startDate, $endDate = null, $limit = 1)
+    public function getOccurrencesBetween(DateTime|string $startDate, DateTime|string $endDate = null, $limit = 1): array
     {
         if (empty($this->startDate) || empty($this->endDate)) {
             return [];
@@ -282,11 +288,11 @@ class CalendarizeModel extends Model
     /**
      * Gets the readable string from rrule
      *
-     * @param opts array
+     * @param array $opts
      *
      * @return string
      */
-    public function readable(array $opts = [])
+    public function readable(array $opts = []): string
     {
         if ($this->repeats) {
             return $this->rrule()->getRRules()[0]->humanReadable($opts);
@@ -297,9 +303,12 @@ class CalendarizeModel extends Model
     /**
      * Initial rrule for field params
      *
-     * @return rrule
+     * @return RSet|CalendarizeModel|array
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedStringException
+     * @throws Exception
      */
-    public function rrule()
+    public function rrule(): RSet|CalendarizeModel|array
     {
         if (null === $this->occurrenceCache) {
             if ($this->repeats) {

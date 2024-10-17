@@ -93,7 +93,7 @@ class ICS extends Component
         $cal = "BEGIN:VCALENDAR\n".
             "VERSION:2.0\n".
             "PRODID:-//CALENDARIZE Craft //EN\n";
-        $filename = $filename ? $filename : $event[0]->getOwner()->getsection()->slug;
+        $filename = $filename ? $filename : $events[0]->getOwner()->getsection()->slug;
 
         foreach($events as $events) {
             $cal .= $this->_makeEvent($events);
@@ -103,7 +103,7 @@ class ICS extends Component
 
         $storage = Craft::$app->getPath()->getStoragePath();
         $path = $storage . "/calendarize/" . $filename . ".ics";
-        $file = FileHelper::writeToFile($path, $cal);
+        FileHelper::writeToFile($path, $cal);
 
         return $path;
     }

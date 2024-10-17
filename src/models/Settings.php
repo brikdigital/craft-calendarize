@@ -22,14 +22,6 @@ use craft\base\Model;
  */
 class Settings extends Model
 {
-    // Public Properties
-    // =========================================================================
-
-    /**
-     * @var string
-     */
-    // public $someAttribute = 'Some Default';
-
     // Public Methods
     // =========================================================================
 

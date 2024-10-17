@@ -13,7 +13,7 @@ class m190129_225213_updateValues extends Migration
     /**
      * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         // Place migration code here...
         $records = CalendarizeRecord::find()

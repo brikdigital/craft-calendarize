@@ -11,6 +11,7 @@
 namespace unionco\calendarize\models;
 
 use Craft;
+use DateMalformedStringException;
 use DateTime;
 use ReflectionClass;
 use craft\base\Element;
@@ -19,29 +20,14 @@ class Occurrence
 {
     // Public Properties
     // =========================================================================
-
-    /**
-     * @var Element
-     */
-    public $element;
-
-    /**
-     * @var string
-     */
-    public $next;
-
-    /**
-     * @var string
-     */
-    public $start;
-
-    /**
-     * @var string
-     */
-    public $end;
+    public Element $element;
+    public string|DateTime $next;
+    public string|DateTime $start;
+    public string|false|DateTime $end;
 
     /**
      *
+     * @throws DateMalformedStringException
      */
     public function __construct(Element $element, DateTime $next, int $diff)
     {

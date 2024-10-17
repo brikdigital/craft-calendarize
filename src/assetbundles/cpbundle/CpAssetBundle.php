@@ -27,7 +27,7 @@ class CpAssetBundle extends AssetBundle
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         $this->sourcePath = "@unionco/calendarize/assetbundles/resources/dist";
 

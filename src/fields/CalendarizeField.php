@@ -11,6 +11,7 @@
 namespace unionco\calendarize\fields;
 
 use Craft;
+use craft\helpers\Html;
 use craft\i18n\Locale;
 use craft\base\Element;
 use craft\base\Field;
@@ -21,6 +22,7 @@ use unionco\calendarize\Calendarize;
 use craft\base\PreviewableFieldInterface;
 use craft\elements\db\ElementQueryInterface;
 use unionco\calendarize\assetbundles\fieldbundle\FieldAssetBundle;
+use unionco\calendarize\models\CalendarizeModel;
 use yii\base\InvalidConfigException;
 
 /**
@@ -146,7 +148,7 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
      */
     public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
-        return Calendarize::$plugin->calendar->getField($this, $element, $value);
+        return Calendarize::$plugin->calendar->getField($this, $value, $element);
     }
 
     /**
@@ -199,11 +201,15 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
      */
     public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
     {
+        if ($value === null) {
+            $value = new CalendarizeModel($element);
+        }
+
         // Register our asset bundle
         $view = Craft::$app->getView();
 
         // Get our id and namespace
-        $id = $view->formatInputId($this->handle);
+        $id = Html::id($this->handle);
         $namespacedId = $view->namespaceInputId($id);
         $locale = Craft::$app->getLocale()->id;
         $dateFormat = Craft::$app->getLocale()->getDateFormat(Locale::LENGTH_MEDIUM);

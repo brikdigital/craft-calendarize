@@ -382,6 +382,7 @@ class CalendarizeService extends Component
     {
         $locale = $owner->getSite()->language;
         $value = $owner->getFieldValue($field->handle);
+        if (!$value) return true;
 
         $record = CalendarizeRecord::findOne(
             [

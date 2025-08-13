@@ -310,7 +310,7 @@ class CalendarizeModel extends Model
      */
     public function rrule(): RSet|CalendarizeModel|array
     {
-        if (null === $this->occurrenceCache) {
+        if (!isset($this->occurrenceCache)) {
             if ($this->repeats) {
                 $config = [
                     'FREQ'       => strtoupper(static::$RRULEMAP[$this->repeatType]),

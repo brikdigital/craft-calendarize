@@ -53,11 +53,11 @@ class DefaultController extends Controller
     public function actionMakeIcs(int $ownerId, int $ownerSiteId, int $fieldId): Response|\yii\web\Response|\yii\console\Response
     {
         $record = CalendarizeRecord::findOne(
-			[
-				'ownerId'     => $ownerId,
-				'ownerSiteId' => $ownerSiteId,
-				'fieldId'     => $fieldId,
-			]
+            [
+                'ownerId' => $ownerId,
+                'ownerSiteId' => $ownerSiteId,
+                'fieldId' => $fieldId,
+            ]
         );
         $owner = $record->getOwner()->one();
         $element = $owner->type::find()
@@ -93,13 +93,13 @@ class DefaultController extends Controller
             ->relatedTo($relatedTo)
             ->all();
 
-        $events = array_reduce($entries, function($carry, $entry) use ($fieldHandle) {
-               if ($event = $entry->$fieldHandle) {
-                   if ($event->startDate && $event->endDate) {
-                       $carry[] = $event;
-                   }
-               }
-               return $carry;
+        $events = array_reduce($entries, function ($carry, $entry) use ($fieldHandle) {
+            if ($event = $entry->$fieldHandle) {
+                if ($event->startDate && $event->endDate) {
+                    $carry[] = $event;
+                }
+            }
+            return $carry;
         }, []);
 
         $ics = Calendarize::$plugin->ics->makeEvents($events, $filename);

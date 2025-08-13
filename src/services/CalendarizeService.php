@@ -312,9 +312,9 @@ class CalendarizeService extends Component
         /** @var Element $owner */
         $record = CalendarizeRecord::findOne(
             [
-                'ownerId'     => $owner->id,
+                'ownerId' => $owner->id,
                 'ownerSiteId' => $owner->siteId,
-                'fieldId'     => $field->id,
+                'fieldId' => $field->id,
             ]
         );
 
@@ -386,30 +386,30 @@ class CalendarizeService extends Component
 
         $record = CalendarizeRecord::findOne(
             [
-                'ownerId'     => $owner->id,
+                'ownerId' => $owner->id,
                 'ownerSiteId' => $owner->siteId,
-                'fieldId'     => $field->id,
+                'fieldId' => $field->id,
             ]
         );
 
         if (!$record) {
-            $record              = new CalendarizeRecord();
-            $record->ownerId     = $owner->id;
+            $record = new CalendarizeRecord();
+            $record->ownerId = $owner->id;
             $record->ownerSiteId = $owner->siteId;
-            $record->fieldId     = $field->id;
+            $record->fieldId = $field->id;
         }
 
         // base
-        $record->startDate      = Db::prepareDateForDb($value->startDate);
-        $record->endDate        = Db::prepareDateForDb($value->endDate);
-        $record->repeats        = (bool) $value->repeats;
-        $record->allDay         = (bool) $value->allDay;
+        $record->startDate = Db::prepareDateForDb($value->startDate);
+        $record->endDate = Db::prepareDateForDb($value->endDate);
+        $record->repeats = (bool)$value->repeats;
+        $record->allDay = (bool)$value->allDay;
 
         if ($record->repeats) {
-            $record->endRepeat      = $value->endRepeat ?? null;
-            $record->repeatType     = $value->repeatType ?? null;
-            $record->days           = Json::encode($value->days ?? []);
-            $record->months         = $value->months ?? null;
+            $record->endRepeat = $value->endRepeat ?? null;
+            $record->repeatType = $value->repeatType ?? null;
+            $record->days = Json::encode($value->days ?? []);
+            $record->months = $value->months ?? null;
 
             if (isset($value->endRepeatDate)) {
                 $record->endRepeatDate = Db::prepareDateForDb($value->endRepeatDate);
@@ -427,12 +427,12 @@ class CalendarizeService extends Component
                 }, $value->timeChanges ?? []));
             }
         } else {
-            $record->endRepeat      = null;
-            $record->endRepeatDate  = null;
-            $record->repeatType     = null;
-            $record->days           = null;
-            $record->months         = null;
-            $record->timeChanges    = null;
+            $record->endRepeat = null;
+            $record->endRepeatDate = null;
+            $record->repeatType = null;
+            $record->days = null;
+            $record->months = null;
+            $record->timeChanges = null;
         }
 
         $save = $record->save();

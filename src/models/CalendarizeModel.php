@@ -76,10 +76,10 @@ class CalendarizeModel extends Model
     // Public Methods
     // =========================================================================
     public function __construct($owner, $attributes = [], array $config = [])
-	{
-		foreach ($attributes as $key => $value) {
-			if (property_exists($this, $key)) {
-				switch ($key) {
+    {
+        foreach ($attributes as $key => $value) {
+            if (property_exists($this, $key)) {
+                switch ($key) {
                     case 'startDate':
                     case 'endDate':
                     case 'endRepeatDate':
@@ -113,15 +113,15 @@ class CalendarizeModel extends Model
         }
 
         $this->owner = $owner;
-		parent::__construct($config);
+        parent::__construct($config);
     }
 
     /**
-	 * @inheritdoc
-	 */
-	public function isValueEmpty($value, ElementInterface $element): bool
-	{
-	    return (empty($value->startDate) && empty($value->endDate));
+     * @inheritdoc
+     */
+    public function isValueEmpty($value, ElementInterface $element): bool
+    {
+        return (empty($value->startDate) && empty($value->endDate));
     }
 
     /**
@@ -214,9 +214,9 @@ class CalendarizeModel extends Model
     /**
      * Get next occurrences
      *
+     * @return array
      * @var int
      *
-     * @return array
      */
     public function getOccurrences($limit = 10)
     {
@@ -229,7 +229,7 @@ class CalendarizeModel extends Model
 
         $this->_adjustTimeChanges($occurrences);
 
-        return array_map(function($occurrence) use($diff) {
+        return array_map(function ($occurrence) use ($diff) {
             return new Occurrence($this->owner, $occurrence, $diff);
         }, $occurrences);
     }
@@ -264,7 +264,7 @@ class CalendarizeModel extends Model
 
         $this->_adjustTimeChanges($occurrences);
 
-        return array_map(function($occurrence) use($diff) {
+        return array_map(function ($occurrence) use ($diff) {
             return new Occurrence($this->owner, $occurrence, $diff);
         }, $occurrences);
     }
@@ -313,10 +313,10 @@ class CalendarizeModel extends Model
         if (!isset($this->occurrenceCache)) {
             if ($this->repeats) {
                 $config = [
-                    'FREQ'       => strtoupper(static::$RRULEMAP[$this->repeatType]),
-                    'INTERVAL'   => 1,
-                    'DTSTART'    => $this->startDate,
-                    'UNTIL'      => $this->endRepeat !== 'never' ? $this->endRepeatDate ?? $this->startDate : null
+                    'FREQ' => strtoupper(static::$RRULEMAP[$this->repeatType]),
+                    'INTERVAL' => 1,
+                    'DTSTART' => $this->startDate,
+                    'UNTIL' => $this->endRepeat !== 'never' ? $this->endRepeatDate ?? $this->startDate : null
                 ];
 
                 if ($this->endRepeat === 'never') {
@@ -330,10 +330,10 @@ class CalendarizeModel extends Model
                 }
             } else {
                 $config = [
-                    'FREQ'       => "DAILY",
-                    'INTERVAL'   => 1,
-                    'DTSTART'    => $this->startDate,
-                    'UNTIL'      => $this->startDate
+                    'FREQ' => "DAILY",
+                    'INTERVAL' => 1,
+                    'DTSTART' => $this->startDate,
+                    'UNTIL' => $this->startDate
                 ];
                 $this->repeatType = 'daily';
             }

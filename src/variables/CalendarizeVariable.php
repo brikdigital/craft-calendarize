@@ -37,14 +37,14 @@ class CalendarizeVariable
         if (!$length) {
             $length = Locale::LENGTH_ABBREVIATED;
         }
-        
+
         $days = [];
         $daysOfWeek = Craft::$app->getLocale()->getWeekDayNames($length);
-        
+
         foreach ($daysOfWeek as $key => $day) {
             $days[] = ["value" => $key, "label" => $day];
         }
-        
+
         return $days;
     }
 

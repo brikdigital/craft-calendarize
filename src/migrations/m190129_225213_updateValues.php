@@ -22,12 +22,12 @@ class m190129_225213_updateValues extends Migration
         if (count($records)) {
             foreach ($records as $record) {
                 if (!$record->repeats) {
-                    $record->endRepeat      = null;
-                    $record->endRepeatDate  = null;
-                    $record->repeatType     = null;
-                    $record->days           = null;
-                    $record->months         = null;
-                    $record->timeChanges    = null;
+                    $record->endRepeat = null;
+                    $record->endRepeatDate = null;
+                    $record->repeatType = null;
+                    $record->days = null;
+                    $record->months = null;
+                    $record->timeChanges = null;
 
                     $record->save();
                 }

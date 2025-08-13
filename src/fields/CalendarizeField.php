@@ -59,7 +59,7 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
      * @var boolean
      */
     public $allDay = false;
-    
+
     /**
      * @var array
      */
@@ -119,13 +119,13 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
     }
 
     /**
-	 * @inheritdoc
-	 */
-	public static function hasContentColumn(): bool
-	{
-		return false;
+     * @inheritdoc
+     */
+    public static function hasContentColumn(): bool
+    {
+        return false;
     }
-    
+
     // Public Methods
     // =========================================================================
 
@@ -139,14 +139,14 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
     }
 
     /**
-	 * @inheritdoc
-	 */
-	public function getElementValidationRules(): array
-	{
-		return [
-			[CalendarizeValidator::class, 'on' => Element::SCENARIO_LIVE],
-		];
-	}
+     * @inheritdoc
+     */
+    public function getElementValidationRules(): array
+    {
+        return [
+            [CalendarizeValidator::class, 'on' => Element::SCENARIO_LIVE],
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -159,25 +159,25 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
     /**
      * @throws Exception
      */
-	public function modifyElementsQuery(ElementQueryInterface $query, mixed $value): void
-	{
-		// For whatever reason, this function can be
-		// run BEFORE Calendarize has been initialized
-		if (!Calendarize::$plugin) {
+    public function modifyElementsQuery(ElementQueryInterface $query, mixed $value): void
+    {
+        // For whatever reason, this function can be
+        // run BEFORE Calendarize has been initialized
+        if (!Calendarize::$plugin) {
             return;
         }
 
-		Calendarize::$plugin->calendar->modifyElementsQuery($query, $value);
+        Calendarize::$plugin->calendar->modifyElementsQuery($query, $value);
     }
 
     /**
      * @inheritdoc
      * @throws Exception
      */
-	public function afterElementSave(ElementInterface $element, bool $isNew): void
-	{
-		Calendarize::$plugin->calendar->saveField($this, $element);
-		parent::afterElementSave($element, $isNew);
+    public function afterElementSave(ElementInterface $element, bool $isNew): void
+    {
+        Calendarize::$plugin->calendar->saveField($this, $element);
+        parent::afterElementSave($element, $isNew);
     }
 
     public function getTableAttributeHtml(mixed $value, ElementInterface $element): string
@@ -185,10 +185,10 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
         if (empty($value->startDate) && empty($value->endDate)) {
             return '-';
         }
-        
+
         $hr = $value->readable(['locale' => Craft::$app->locale->id]);
         $html = "<span title=\"{$hr}\">";
-        
+
         if ($value->hasPassed()) {
             $html .= "<b>" . Craft::t('calendarize', 'Last Occurrence') . ":</b>";
         } else {

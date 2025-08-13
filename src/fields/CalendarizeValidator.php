@@ -7,16 +7,18 @@
  * @link      https://union.co
  * @copyright Copyright (c) 2018 Franco Valdes
  */
+
 namespace unionco\calendarize\fields;
 
 use yii\validators\Validator;
 
-class CalendarizeValidator extends Validator {
+class CalendarizeValidator extends Validator
+{
 
-	/**
-	 * @inheritdoc
-	 */
-	protected function validateValue($value): ?array
+    /**
+     * @inheritdoc
+     */
+    protected function validateValue($value): ?array
     {
         if ($value->startDate && !$value->endDate) {
             return [
@@ -42,15 +44,15 @@ class CalendarizeValidator extends Validator {
 
         if (isset($value->endRepeat) && $value->endRepeat === 'date' && !$value->endRepeatDate) {
             return [
-                    \Craft::t(
-                        'calendarize',
-                        'End Repeat Date is required if repeating ends on date'
-                    ),
-                    []
-                ];
+                \Craft::t(
+                    'calendarize',
+                    'End Repeat Date is required if repeating ends on date'
+                ),
+                []
+            ];
         }
-        
-		return null;
-	}
+
+        return null;
+    }
 
 }

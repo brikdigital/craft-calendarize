@@ -228,7 +228,7 @@ class CalendarizeService extends Component
 
         $cacheHash = md5(($from->format('YmdH')) . (Json::encode($criteria)));
 
-        if (null === $this->entryCache || !isset($this->entryCache[$cacheHash])) {
+        if (!isset($this->entryCache[$cacheHash])) {
             $query = CalendarizeRecord::find();
             $query->select = ['ownerId'];
             $query->where([

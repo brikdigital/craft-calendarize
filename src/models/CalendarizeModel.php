@@ -71,7 +71,7 @@ class CalendarizeModel extends Model
     // Private Properties
     // =========================================================================
 
-    private RSet $occurrenceCache;
+    private ?RSet $occurrenceCache;
 
     // Public Methods
     // =========================================================================

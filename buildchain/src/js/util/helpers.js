@@ -33,7 +33,9 @@ export const getLocalizeMoment = (dateString) => {
     }
     const currentLocaleData = moment.localeData();
     const localeFormat = currentLocaleData._longDateFormat.L;
-    return moment(dateString, localeFormat);
+
+    const [d, m, y] = dateString.split('-');
+    return moment(`${m}-${d}-${y}`, localeFormat);
 }
 
 export const weekIndex = (dateString) => {

@@ -24,6 +24,8 @@ use craft\events\RegisterElementSortOptionsEvent;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
+use nystudio107\pluginvite\services\VitePluginService;
+use unionco\calendarize\assetbundles\CalendarizeAsset;
 use unionco\calendarize\fields\CalendarizeField;
 use unionco\calendarize\models\Settings;
 use unionco\calendarize\services\CalendarizeService;
@@ -39,6 +41,7 @@ use yii\base\Event;
  * @since     1.0.0
  *
  * @property-read  CalendarizeService $calendar
+ * @property-read  VitePluginService  $vite;
  */
 class Calendarize extends Plugin
 {
@@ -145,6 +148,18 @@ class Calendarize extends Plugin
             ),
             __METHOD__
         );
+    }
+
+    public static function config(): array
+    {
+        return [
+            'components' => [
+                'vite' => [
+                    'class' => VitePluginService::class,
+                    'assetClass' => CalendarizeAsset::class,
+                ]
+            ]
+        ];
     }
 
     public function afterInstall(): void

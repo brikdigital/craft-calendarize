@@ -8,9 +8,8 @@
  * @copyright Copyright (c) 2018 Franco Valdes
  */
 
-namespace unionco\calendarize\assetbundles\fieldbundle;
+namespace unionco\calendarize\assetbundles;
 
-use Craft;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
@@ -19,7 +18,7 @@ use craft\web\assets\cp\CpAsset;
  * @package   Calendarize
  * @since     1.0.0
  */
-class FieldAssetBundle extends AssetBundle
+class CalendarizeAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
@@ -29,19 +28,10 @@ class FieldAssetBundle extends AssetBundle
      */
     public function init(): void
     {
-        $this->sourcePath = "@unionco/calendarize/assetbundles/resources/dist";
+        $this->sourcePath = "@unionco/calendarize/web/assets/dist";
 
         $this->depends = [
             CpAsset::class,
-        ];
-
-        $this->js = [
-            'js/vendor.js',
-            'js/main.js',
-        ];
-
-        $this->css = [
-            'css/app.css',
         ];
 
         parent::init();

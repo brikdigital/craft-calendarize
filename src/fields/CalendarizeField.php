@@ -11,17 +11,17 @@
 namespace unionco\calendarize\fields;
 
 use Craft;
-use craft\helpers\Html;
-use craft\i18n\Locale;
 use craft\base\Element;
-use craft\base\Field;
 use craft\base\ElementInterface;
-use DateTime;
-use Exception;
-use unionco\calendarize\Calendarize;
+use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
 use craft\elements\db\ElementQueryInterface;
-use unionco\calendarize\assetbundles\fieldbundle\FieldAssetBundle;
+use craft\helpers\Html;
+use craft\i18n\Locale;
+use DateTime;
+use Exception;
+use unionco\calendarize\assetbundles\CalendarizeAsset;
+use unionco\calendarize\Calendarize;
 use unionco\calendarize\models\CalendarizeModel;
 use yii\base\InvalidConfigException;
 
@@ -214,7 +214,18 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
         $locale = Craft::$app->getLocale()->id;
         $dateFormat = Craft::$app->getLocale()->getDateFormat(Locale::LENGTH_MEDIUM);
 
-        $view->registerAssetBundle(FieldAssetBundle::class);
+        $tagOptions = [
+            'depends' => [
+                CalendarizeAsset::class,
+            ]
+        ];
+        try {
+            $view->registerAssetBundle(CalendarizeAsset::class);
+            Calendarize::$plugin->vite->register('src/js/main.js', false, $tagOptions, $tagOptions);
+        } catch (InvalidConfigException $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
+
         $view->registerJs("new Calendarize('{$namespacedId}', '{$locale}', '{$dateFormat}');");
 
         // Render the input template

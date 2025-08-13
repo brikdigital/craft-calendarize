@@ -1,0 +1,7 @@
+onlyBuiltDependencies:
+  - core-js
+  - fsevents
+  - gifsicle
+  - jpegtran-bin
+  - optipng-bin
+  - pngquant-bin

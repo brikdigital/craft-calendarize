@@ -11,6 +11,8 @@
 /bower_components/*
 node_modules
 /build/*
+*.br
+*.gz
 /yarn-error.log
 
 # MISC FILES

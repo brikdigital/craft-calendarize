@@ -1,3 +1,5 @@
+import "@/scss/app.scss";
+
 import { onInit as IfInit } from './modules/if';
 import { onInit as MonthSelectInit } from './modules/month-select';
 import { onInit as ListSwitchInit } from './modules/light-switch';

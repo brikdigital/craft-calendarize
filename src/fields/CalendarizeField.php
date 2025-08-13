@@ -35,6 +35,11 @@ class CalendarizeField extends Field implements PreviewableFieldInterface
     // Public Properties
     // =========================================================================
 
+    // NOTE(alyxia): This isn't actually used for anything (I think), but without it an exception is raised.
+    //   Before you ask, no, it's not for translation purposes. That's done by Craft, not by the plugin.
+    //   Either live in bliss and keep it, or figure out what it's for!
+    public $siteId = 99;
+
     /**
      * @var DateTime
      */

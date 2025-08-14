@@ -10,9 +10,16 @@ export default defineConfig(({command}) => ({
         manifest: 'manifest.json',
         outDir: '../src/web/assets/dist',
         sourcemap: true,
+        cssMinify: 'lightningcss',
         rolldownOptions: {
             input: {
                 app: 'src/js/main.js',
+            },
+            optimization: {
+                inlineConst: true
+            },
+            experimental: {
+                incrementalBuild: true,
             },
         }
     },

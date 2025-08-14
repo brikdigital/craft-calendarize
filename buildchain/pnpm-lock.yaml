@@ -15,6 +15,9 @@ importers:
         specifier: ^2.23.0
         version: 2.30.1
     devDependencies:
+      '@brik-digital/craftcms-typedefs':
+        specifier: ^1.1.1
+        version: 1.1.1
       cross-env:
         specifier: ^5.1
         version: 5.2.1
@@ -29,6 +32,9 @@ importers:
         version: 2.2.0
 
 packages:
+
+  '@brik-digital/craftcms-typedefs@1.1.1':
+    resolution: {integrity: sha512-MmF8jTPGn44jaMDCUshCl1lWYmtlLgDUwz/LNkTbCTTx74HVc8o16sUr9BCmzsAzWl5QS4LDEJduXBh6iaQVYA==}
 
   '@bufbuild/protobuf@2.6.3':
     resolution: {integrity: sha512-w/gJKME9mYN7ZoUAmSMAWXk4hkVpxRKvEJCb3dV5g9wwWdxTJJ0ayOJAVcNxtdqaxDyFuC0uz4RSGVacJ030PQ==}
@@ -825,6 +831,8 @@ packages:
     hasBin: true
 
 snapshots:
+
+  '@brik-digital/craftcms-typedefs@1.1.1': {}
 
   '@bufbuild/protobuf@2.6.3': {}
 

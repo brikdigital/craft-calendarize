@@ -9,6 +9,7 @@
     "moment": "^2.23.0"
   },
   "devDependencies": {
+    "@brik-digital/craftcms-typedefs": "^1.1.1",
     "cross-env": "^5.1",
     "sass-embedded": "^1.90.0",
     "vite": "^7.1.2",

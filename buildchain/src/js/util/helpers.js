@@ -1,4 +1,7 @@
-import moment from 'moment';
+// NOTE(lexisother): I really don't want to do this but I'm really left no choice.
+//  Dynamic imports are apparently not an option. So we'll have to settle with
+//  quadrupling (64kB~ -> 300kB~) our result bundle size just for some stupid locale support.
+import moment from 'moment/min/moment-with-locales';
 
 export default {};
 
@@ -34,8 +37,7 @@ export const getLocalizeMoment = (dateString) => {
     const currentLocaleData = moment.localeData();
     const localeFormat = currentLocaleData._longDateFormat.L;
 
-    const [d, m, y] = dateString.split('-');
-    return moment(`${m}-${d}-${y}`, localeFormat);
+    return moment(dateString, localeFormat);
 }
 
 export const weekIndex = (dateString) => {

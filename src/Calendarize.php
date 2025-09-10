@@ -21,6 +21,7 @@ use craft\events\CancelableEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterElementSortOptionsEvent;
+use craft\feedme\events\RegisterFeedMeFieldsEvent;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
@@ -139,6 +140,14 @@ class Calendarize extends Plugin
         //         }
         //     }
         // );
+
+        Event::on(
+            \craft\feedme\services\Fields::class,
+            \craft\feedme\services\Fields::EVENT_REGISTER_FEED_ME_FIELDS,
+            function (RegisterFeedMeFieldsEvent $event) {
+                $event->fields[] = \unionco\calendarize\feedme\fields\CalendarizeField::class;
+            }
+        );
 
         Craft::info(
             Craft::t(

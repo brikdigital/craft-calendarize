@@ -24,7 +24,8 @@
         "craftcms/cms": "^5.4.8",
         "rlanvin/php-rrule": "~1.6.0",
         "ext-openssl": "*",
-        "nystudio107/craft-plugin-vite": "^5.0"
+        "nystudio107/craft-plugin-vite": "^5.0",
+        "craftcms/feed-me": "^6.6"
     },
     "autoload": {
         "psr-4": {

@@ -143,7 +143,7 @@
                         {% for key, exception in value.exceptions %}
                             <li>
                                 <div data-icon="remove"></div>
-                                <p>{{ exception | date('l, d-m-Y') }}</p>
+                                <p>{{ exception | date('l') }}, {{ exception | date('short') }}</p>
                                 <input type="hidden" name="{{ name }}[exceptions][{{ key }}][date]" value="{{ exception | date('short') }}"/>
                                 <input type="hidden" name="{{ name }}[exceptions][{{ key }}][timezone]" value="{{ craft.app.getTimeZone() }}"/>
                             </li>
@@ -168,7 +168,7 @@
                 <ul>
                     <li>{{'Occurrences'|t("calendarize")}}:</li>
                     {% for occurrence in value.getOccurrences(10) %}
-                        <li>{{ occurrence.format('m/d/Y @ h:i:s a') }}</li>
+                        <li>{{ occurrence.next|datetime('short') }}</li>
                     {% endfor %}
                     {% if value.getOccurrences | length > 10 %}
                         <li>...</li>

@@ -59,11 +59,13 @@ class CalendarException {
             let newValue = localizedMoment.format('D/M/Y');
 
             const name = this.hiddenName;
-            const position = name.indexOf('[date]');
+            const position = name.lastIndexOf('[date]');
             const newFieldName = [name.slice(0, position), `[${length || 0}]`, name.slice(position)].join('');
 
             const hidden = this.createInput(newFieldName, 'hidden', newValue);
-            const timezone = this.createInput(newFieldName.replace('date', 'timezone'), 'hidden', Craft.timezone);
+
+            const newPosition = newFieldName.lastIndexOf('[date]');
+            const timezone = this.createInput(newFieldName.substring(0, newPosition) + '[timezone]', 'hidden', Craft.timezone);
 
             p.innerHTML = getLocalizedDayName(localizedMoment) + ', ' + localizedMoment.format('L');
 

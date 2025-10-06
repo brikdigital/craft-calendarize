@@ -159,16 +159,20 @@
             <p>
                 {% if value.hasPassed %}{{'Date'|t("calendarize")}}:{% else %}{{'Next Occurrence'|t("calendarize")}}:{% endif %}
                 {% if value.allDay %}
-                    <b>{{ value.next.format('m/d/Y') }}</b>
+                    <b>{{ value.next.format('d/m/Y') }}</b>
                 {% else %}
-                    <b>{{ value.next.format('m/d/Y @ h:i:s a') }}</b>
+                    <b>{{ value.next|datetime('d/m/Y h:i') }}</b>
                 {% endif %}
             </p>
             {% if value.repeats %}
                 <ul>
                     <li>{{'Occurrences'|t("calendarize")}}:</li>
                     {% for occurrence in value.getOccurrences(10) %}
-                        <li>{{ occurrence.next|datetime('short') }}</li>
+                        {% if value.allDay %}
+                            <li>{{ occurrence.next|datetime('d/m/Y') }}</li>
+                        {% else %}
+                            <li>{{ occurrence.next|datetime('d/m/Y h:i') }}</li>
+                        {% endif %}
                     {% endfor %}
                     {% if value.getOccurrences | length > 10 %}
                         <li>...</li>
